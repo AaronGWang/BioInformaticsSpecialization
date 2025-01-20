@@ -1,0 +1,1 @@
+  print(f"{string} is a universal binary string: {determine_universal_string(3, string)}")
