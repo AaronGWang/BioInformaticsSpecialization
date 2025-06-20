@@ -17,7 +17,7 @@ def generate_bits(bit_value: int) -> list:
   return bits
 
 
-def determine_universal_string(bit_value: int, text: str) -> bool:
+def determine_universal_string(bit_value: int, text: str) -> tuple:
   '''
   Determines if a given string is a universal binary string by containing all bit_value-binary strings.
 
