@@ -28,14 +28,15 @@ def eulerian_cycle(graph: dict[int, list[int]]) -> list[int]:
   cycle.append(current_node)
 
   while True:
-    print(f"Current cycle: {cycle}, current node: {current_node}")
     # Walk through the graph
     next_node = random.choice(graph[current_node])
     cycle.append(next_node)
     graph[current_node].remove(next_node)
     current_node = next_node
 
-    print(f"Cycle so far: {cycle}")
+    # If we have no unexplored edges left, we can break the loop
+    if not any(graph.values()):
+      break
 
     # If we get stuck back at the starting node
     if not graph[current_node]:
@@ -52,12 +53,6 @@ def eulerian_cycle(graph: dict[int, list[int]]) -> list[int]:
           current_node = cycle[-1]
           break
 
-    # If we have no unexplored edges left, we can break the loop
-    if not any(graph.values()):
-      break
-
-  # Close by adding the starting node at the end to make it a cycle
-  cycle.append(cycle[0])
   return cycle
 
 
