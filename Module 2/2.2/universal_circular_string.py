@@ -124,9 +124,11 @@ bits = generate_bits(k)
 de_bruijn_graph = construct_de_bruijn_graph(k, bits)
 # print(f"Generated bits: {bits}")
 # print(f"Constructed De Bruijn graph: {de_bruijn_graph}")
-cycle = eulerian_cycle(de_bruijn_graph)
+
+cycle = eulerian_cycle(de_bruijn_graph) # type: ignore
 # print(f"Generated Eulerian cycle: {cycle}")
-string = construct_circular_string(cycle)
+
+string = construct_circular_string(cycle) # type: ignore
 # print(f"Generated circular string: {string}")
 
 if determine_universal_circular_string(k, string):

@@ -15,7 +15,7 @@ import pyperclip
 
 def eulerian_path(graph: dict[int, list[int]], start_node: int) -> list[int]:
   '''
-  Find an Eulerian cycle in a directed graph using a random walk approach.
+  Find an Eulerian path in a directed graph using a random walk approach.
 
   Parameters:
     graph (dict[int, list[int]]): a directed graph represented as an adjacency list

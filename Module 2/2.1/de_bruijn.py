@@ -2,7 +2,6 @@ import pyperclip
 
 
 def de_bruijn_graph(k: int, text: str) -> dict[str, set[str]]:
-
     '''
     Generate the de Bruijn graph for a given k and string Text.
 
