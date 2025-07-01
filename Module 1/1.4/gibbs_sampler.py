@@ -12,9 +12,6 @@ def select_random_kmers(motifs: list, k: int) -> list:
 
   Returns:
     selected_kmers (list): list of selected motifs, one from each DNA string
-
-
-  
   '''
   t = len(motifs)
   n = len(motifs[0])
