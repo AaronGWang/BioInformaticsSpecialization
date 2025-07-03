@@ -150,15 +150,15 @@ def construct_genome_from_read_pairs(path: list[str], k: int, d: int) -> str:
 
 
 ### Test Cases ###
-# k = 4 
-# d = 2
-# read_pairs = ["GACC|GCGC", "ACCG|CGCC", "CCGA|GCCG", "CGAG|CCGG", "GAGC|CGGA"]
-
+k = 4 
+d = 2
+read_pairs = ["GACC|GCGC", "ACCG|CGCC", "CCGA|GCCG", "CGAG|CCGG", "GAGC|CGGA"]
 
 # file = open("string_spelled_by_gapped_patterns.txt", "r").readlines()
-file = open("string_reconstruction_from_read_pairs.txt", "r").readlines()
-k, d = map(int, file[0].strip().split())
-read_pairs = file[1].strip().split()
+# file = open("string_reconstruction_from_read_pairs.txt", "r").readlines()
+# k, d = map(int, file[0].strip().split())
+# read_pairs = file[1].strip().split()
+
 
 graph = construct_read_pairs_de_bruijn_graph(read_pairs)
 new_graph, start_node, end_node = connect_boundary_nodes(graph)

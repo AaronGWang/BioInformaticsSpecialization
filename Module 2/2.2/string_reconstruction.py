@@ -143,18 +143,18 @@ def construct_genome(kmers: list[str]) -> str:
 
 
 ### Test Cases ###
-# k = 4
-# patterns = ['CTTA', 'ACCA', 'TACC', 'GGCT', 'GCTT', 'TTAC']
+k = 4
+patterns = ['CTTA', 'ACCA', 'TACC', 'GGCT', 'GCTT', 'TTAC']
 
 
-file = open("string_reconstruction.txt").read().strip().splitlines()
-k = int(file[0])
-patterns = list(file[1].split())
+# file = open("string_reconstruction.txt").read().strip().splitlines()
+# k = int(file[0])
+# patterns = list(file[1].split())
 
 
 while True:
   de_bruijn_graph = construct_de_bruijn_graph(k, patterns)
-  new_graph, start_node, end_node = connect_boundary_node(de_bruijn_graph)
+  new_graph, start_node, end_node = connect_boundary_nodes(de_bruijn_graph)
   path = eulerian_path(new_graph, start_node)
 
   if path[0] == start_node and path[-1] == end_node:

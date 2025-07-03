@@ -22,20 +22,21 @@ def de_bruijn_graph(patterns: list) -> dict:
     return graph
 
 
-def check_out_degree(graph: dict, node: int) -> int:
+def check_1_in_1_out(graph: dict, node: int) -> bool:
   '''
-  Check the out-degree of a node in the de Bruijn graph.
+  Check if a node is a 1-in-1-out node in the de Bruijn graph.
 
   Args:
     graph (dict): The de Bruijn graph.
     node (int): The node to check.
 
   Returns:
-    int: The out-degree of the node.
+    bool: True if the node is a 1-in-1-out node, False otherwise.
   '''
   out_degree = len(graph.get(node, []))
+  in_degree = sum(1 for edges in graph.values() if node in edges)
 
-  return out_degree
+  return out_degree == 1 and in_degree == 1
 
 
 # 1st node branching = ok
@@ -64,52 +65,39 @@ def generate_contigs(graph: dict) -> list:
 
   # For every starting node in the graph
   for node in graph:
-      print("\n----Processing node:", node)
+    
+    if check_1_in_1_out(graph, node):
+      continue
 
-      # Extend the contig with every first adjacent node
-      for next_node in graph[node]:
-        print(f"  Next node after {node}: {next_node}")
+    for next_node in graph[node]:
+      contig = node + next_node[-1]
+      current_node = next_node
 
-        contig = node + next_node[-1]
+      # Extend the contig while the next node is a 1-in-1-out node
+      while check_1_in_1_out(graph, current_node):
 
-        print(f"  Initial contig: {contig}")
+        next_nodes = graph.get(current_node, [])
 
-        if check_out_degree(graph, next_node) != 1:
-          print(f"    Next node {next_node} has out-degree != 1, breaking and adding contig: {contig}")
-
-          contigs.append(contig)
+        if len(next_nodes) == 1:
+          current_node = next_nodes[0]
+          contig += current_node[-1]
 
         else:
-          print(f"    Next node {next_node} has out-degree == 1, continuing to extend contig: {contig}")
-          next_node = graph[next_node][0]
+          break
 
-          print(f"    Next node after extension: {next_node}")
+      # Add the contig to the list
+      contigs.append(contig)
 
-          while check_out_degree(graph, next_node) == 1:
-            print(f"    Next node {next_node} has out-degree == 1, continuing to extend contig: {contig}")
-            contig += next_node[-1]
-            next_node = graph[next_node][0]
-          
-            print(f"    Next node after extension: {next_node}")
-            print(f"    Extended contig: {contig}")
-
-          print(f"    Next node {next_node} has out-degree != 1, breaking and adding contig: {contig}")
-          contigs.append(contig)
-
-  return contigs
+  return sorted(contigs)
 
 
 ### TEST CASES ###
 kmers = ["ATG", "ATG", "TGT", "TGG", "CAT", "GGA", "GAT", "AGA"]
 
-# De Bruijn graph: 'AT': ['TG', 'TG'], 'TG': ['GT', 'GG'], 'CA': ['AT'], 'GG': ['GA'], 'GA': ['AT'], 'AG': ['GA']
-
-# {1: [2, 2], 2: [7, 4], 3: [1], 4: [5], 5: [1], 6: [5]}
-
 # file = open('contig_generation.txt', 'r').readlines()
 # kmers = [kmer.strip() for kmer in file[0].split(' ')]
-print("de Bruijn graph from k-mers:", de_bruijn_graph(kmers))
 
 contigs = generate_contigs(de_bruijn_graph(kmers))
 
-print("Generated contigs:", contigs)
+print(contigs)
+pyperclip.copy(' '.join(contigs))
