@@ -2,18 +2,28 @@ import pyperclip
 from rna_translation import import_rna_codon_table
 
 
-def dna_reverse_complement(sequence: str):
-  dna_dict = {"A": "T", 
-           "T": "A", 
-           "C": "G", 
-           "G": "C"}
-  
-  complement = ""
-  sequence = sequence.strip()
-  for char in sequence:
-    complement += dna_dict[char]
+def dna_reverse_complement(sequence: str) -> str:
+    '''
+    Generate the reverse complement of a DNA sequence.
 
-  return complement[::-1]
+    Args:
+        sequence (str): The DNA sequence to be reversed and complemented.
+
+    Returns:
+        str: The reverse complement of the DNA sequence.
+    '''
+    dna_dict = {"A": "T", 
+            "T": "A", 
+            "C": "G", 
+            "G": "C"}
+    
+    complement = ""
+    sequence = sequence.strip().upper()
+
+    for char in sequence:
+        complement += dna_dict[char]
+
+    return complement[::-1]
 
 
 def transcript_dna_to_rna(dna_sequence: str) -> str:
@@ -30,6 +40,17 @@ def transcript_dna_to_rna(dna_sequence: str) -> str:
 
 
 def encode_peptide_sequence(rna_sequence: str, peptide: str, rna_codon_table: dict) -> list:
+    '''
+    Encodes a peptide sequence into all possible RNA substrings that can translate to it.
+    
+    Args:
+        rna_sequence (str): The RNA sequence to search within.
+        peptide (str): The peptide sequence to be encoded.
+        rna_codon_table (dict): A dictionary mapping RNA codons to their corresponding amino acids.
+
+    Returns:
+        list: A list of RNA substrings that can translate to the given peptide.
+    '''
     substrings = []
 
     for i in range(0, len(rna_sequence) - len(peptide) * 3 + 1):
@@ -62,6 +83,7 @@ def encode_peptide_sequence(rna_sequence: str, peptide: str, rna_codon_table: di
 ### TEST CASES ###
 # dna = "ATGGCCATGGCCCCCAGAACTGAGATCAATAGTACCCGTATTAACGGGTGA"
 # peptide = "MA"
+
 
 if __name__ == "__main__":
   file = open("peptide_encoding.txt", "r").readlines()
