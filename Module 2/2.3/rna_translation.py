@@ -41,14 +41,12 @@ def translate_rna_to_protein(rna_sequence: str, rna_codon_table: dict) -> str:
   return ''.join(protein_sequence)
 
 
-### TEST CASES ###
-# rna = "AUGGCCAUGGCGCCCAGAACUGAGAUCAAUAGUACCCGUAUUAACGGGUGA"
-
-
 if __name__ == "__main__":
+  ### TEST CASES ###
+  # rna = "AUGGCCAUGGCGCCCAGAACUGAGAUCAAUAGUACCCGUAUUAACGGGUGA"
+
   file = open('rna_translation.txt', 'r')
   rna = file.read().strip()
-  print(rna[0:10])
 
   rna_codon_table = import_rna_codon_table()
 
