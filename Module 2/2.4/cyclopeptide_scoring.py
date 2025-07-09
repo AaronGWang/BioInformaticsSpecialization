@@ -21,16 +21,16 @@ def import_amino_acid_integer_mass_table() -> dict:
   return amino_acid_mass_table
 
 
-def generate_theoretical_spectrum(peptide: str, amino_acid_mass_table: dict) -> list:
+def generate_cyclic_spectrum(peptide: str, amino_acid_mass_table: dict) -> list:
   '''
-  Generate the theoretical spectrum of a given peptide.
+  Generate the theoretical cyclic spectrum of a given peptide.
 
   Args:
     peptide (str): The peptide sequence.
     amino_acid_mass_table (dict): A dictionary mapping amino acid symbols to their integer masses.
 
   Returns:
-    list: The theoretical spectrum of the peptide.
+    list: The theoretical cyclic spectrum of the peptide.
   '''
   spectrum = [0]
   n = len(peptide)
@@ -52,8 +52,18 @@ def generate_theoretical_spectrum(peptide: str, amino_acid_mass_table: dict) -> 
   return spectrum
 
 
-def cyclopeptide_scoring(peptide: str, experimental_spectrum: list) -> int:
-  theoretical_spectrum = generate_theoretical_spectrum(peptide, import_amino_acid_integer_mass_table())
+def cyclic_scoring(peptide: str, experimental_spectrum: list) -> int:
+  '''
+  Compute the cyclic score of a peptide against an experimental spectrum.
+
+  Args:
+    peptide (str): The peptide sequence.
+    experimental_spectrum (list): The experimental mass spectrum.
+
+  Returns:
+    int: The cyclic score of the peptide.
+  '''
+  theoretical_spectrum = generate_cyclic_spectrum(peptide, import_amino_acid_integer_mass_table())
   score = 0
 
   unique_theoretical_spectrum = set(theoretical_spectrum)
@@ -77,5 +87,5 @@ if __name__ == "__main__":
   peptide = file[0].strip()
   experimental_spectrum = list(map(int, file[1].strip().split()))
 
-  print(cyclopeptide_scoring(peptide, experimental_spectrum))
-  pyperclip.copy(str(cyclopeptide_scoring(peptide, experimental_spectrum)))
+  print(cyclic_scoring(peptide, experimental_spectrum))
+  pyperclip.copy(str(cyclic_scoring(peptide, experimental_spectrum)))
