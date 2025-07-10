@@ -112,7 +112,7 @@ def trim(leaderboard: list, experimental_spectrum: list, N: int) -> list:
   
   threshold_score = scores[N - 1][1]
 
-  return [peptide for peptide, score in scores if score >= threshold_score][:N]
+  return [peptide for peptide, score in scores if score >= threshold_score]
 
 
 def leaderboard_cyclopeptide_sequencing(experimental_spectrum: list, N: int) -> list:
