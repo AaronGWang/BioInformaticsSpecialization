@@ -59,7 +59,6 @@ def peptide_scoring(peptide: list, experimental_spectrum: list, linear: str = "c
   Args:
     peptide (list): The peptide sequence.
     experimental_spectrum (list): The experimental mass spectrum.
-    linear (str): The type of spectrum to use for scoring ("linear" or "cyclic").
 
   Returns:
     int: The cyclic score of the peptide.
@@ -94,7 +93,7 @@ def expand(peptides: list) -> list:
   Returns:
     list: A new list of peptides with each possible amino acid mass added.
   '''
-  amino_acid_masses = [57, 71, 87, 97, 99, 101, 103, 113, 114, 115, 128, 129, 131, 137, 147, 156, 163, 186]
+  amino_acid_masses = [i for i in range(57, 201)]
 
   return [peptide + [mass] for peptide in peptides for mass in amino_acid_masses]
 
@@ -116,9 +115,9 @@ def trim(leaderboard: list, experimental_spectrum: list, N: int) -> list:
   return [peptide for peptide, score in scores if score >= threshold_score][:N]
 
 
-def leaderboard_cyclopeptide_sequencing(experimental_spectrum: list, N: int) -> str:
+def leaderboard_cyclopeptide_sequencing(experimental_spectrum: list, N: int) -> list:
     leaderboard = [[]]
-    leader_peptide = []
+    leader_peptides = []
     best_score = 0
     parent_mass = max(experimental_spectrum)
 
@@ -141,7 +140,11 @@ def leaderboard_cyclopeptide_sequencing(experimental_spectrum: list, N: int) -> 
                 if peptide_scoring(peptide, experimental_spectrum) > best_score:
                     # print("New Leader Peptide Found:", peptide)
                     best_score = peptide_scoring(peptide, experimental_spectrum)
-                    leader_peptide = peptide
+                    leader_peptides = [peptide]
+
+                elif peptide_scoring(peptide, experimental_spectrum) == best_score:
+                    # print("Found another Leader Peptide with same score:", peptide)
+                    leader_peptides.append(peptide)
 
                 new_leaderboard.append(peptide)
 
@@ -158,8 +161,7 @@ def leaderboard_cyclopeptide_sequencing(experimental_spectrum: list, N: int) -> 
         # print("Trimmed Leaderboard length:", len(leaderboard))
         # print("Trimmed Leaderboard:", leaderboard)
 
-    leader_peptide_str = "-".join(map(str, leader_peptide))
-    return leader_peptide_str
+    return leader_peptides
 
 
 ### LOGIC ###
@@ -179,14 +181,12 @@ def leaderboard_cyclopeptide_sequencing(experimental_spectrum: list, N: int) -> 
 
 
 if __name__ == "__main__":
-  ### TEST CASES ###
-  # N = 10
-  # theoretical_spectrum = [0, 71, 113, 129, 147, 200, 218, 260, 313, 331, 347, 389, 460]
+    file = open("Tyrocidine_B1_Spectrum_10.txt", "r").readlines()
+    N = 1000
+    theoretical_spectrum = list(map(int, file[0].strip().split()))
 
-  file = open("leaderboard_cyclopeptide_sequencing.txt", "r").readlines()
-  N = int(file[0].strip())
-  theoretical_spectrum = list(map(int, file[1].strip().split()))
+    leaders = leaderboard_cyclopeptide_sequencing(theoretical_spectrum, N)
 
-  output = leaderboard_cyclopeptide_sequencing(theoretical_spectrum, N)
-  print("Output Leader Peptide:", output)
-  pyperclip.copy(output)
+    print("\n\n".join("-".join(map(str, leader)) for leader in leaders))
+    print(len(leaders))
+    pyperclip.copy(" ".join("-".join(map(str, leader)) for leader in leaders))
