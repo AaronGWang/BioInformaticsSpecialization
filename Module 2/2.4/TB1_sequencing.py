@@ -83,7 +83,7 @@ def peptide_scoring(peptide: list, experimental_spectrum: list, linear: str = "c
   return score
 
 
-def expand(peptides: list) -> list:
+def expand(peptides: list, standard: bool = True) -> list:
   '''
   Expand the list of peptides by adding each possible amino acid mass.
 
@@ -93,7 +93,11 @@ def expand(peptides: list) -> list:
   Returns:
     list: A new list of peptides with each possible amino acid mass added.
   '''
-  amino_acid_masses = [i for i in range(57, 201)]
+  if standard == False:
+    amino_acid_masses = [i for i in range(57, 201)]
+
+  else:
+    amino_acid_masses = [57, 71, 87, 97, 99, 101, 103, 113, 115, 128, 129, 131, 137, 147, 156, 163, 186]
 
   return [peptide + [mass] for peptide in peptides for mass in amino_acid_masses]
 
@@ -124,7 +128,7 @@ def leaderboard_cyclopeptide_sequencing(experimental_spectrum: list, N: int) -> 
     # print("Parent Mass:", parent_mass)
 
     while leaderboard:
-        leaderboard = expand(leaderboard)
+        leaderboard = expand(peptides=leaderboard, standard=False)
         # print(f"{len(leaderboard)} peptides in the leaderboard of length {len(leaderboard[0]) if leaderboard else 0}")
         # print("Current Leaderboard:", leaderboard)
 
