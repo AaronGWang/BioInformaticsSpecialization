@@ -1,4 +1,4 @@
 *.pdf
 *.DS_Store
 *.log
-**/run_files/
+runs_files/
