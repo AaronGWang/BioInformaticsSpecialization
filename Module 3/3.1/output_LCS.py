@@ -5,7 +5,7 @@ import sys
 sys.setrecursionlimit(10000)
 
 
-def LCSBackTrack(v: str, w: str) -> np.matrix:
+def lcs_backtrack(v: str, w: str) -> np.matrix:
   '''
   Constructs LCS using backtracking pointers.
 
@@ -38,7 +38,7 @@ def LCSBackTrack(v: str, w: str) -> np.matrix:
   return backtrack
 
 
-def OutputLCS(backtrack, v, i, j):
+def output_lcs(backtrack, v, i, j):
   '''
   Constructs the longest common subsequence (LCS) from the backtracking matrix.
 
@@ -55,13 +55,13 @@ def OutputLCS(backtrack, v, i, j):
     return ""
   
   if backtrack[i, j] == 1:  # down
-    return OutputLCS(backtrack, v, i - 1, j)
+    return output_lcs(backtrack, v, i - 1, j)
   
   elif backtrack[i, j] == 2:  # right
-    return OutputLCS(backtrack, v, i, j - 1)
+    return output_lcs(backtrack, v, i, j - 1)
   
   else:  # diagonal
-    return OutputLCS(backtrack, v, i - 1, j - 1) + v[i - 1]
+    return output_lcs(backtrack, v, i - 1, j - 1) + v[i - 1]
 
 
 if __name__ == "__main__":
@@ -73,7 +73,7 @@ if __name__ == "__main__":
   v = file[0].strip()
   w = file[1].strip()
 
-  result = OutputLCS(LCSBackTrack(v, w), v, len(v), len(w))
+  result = output_lcs(lcs_backtrack(v, w), v, len(v), len(w))
   print(result)
   pyperclip.copy(result)
 
