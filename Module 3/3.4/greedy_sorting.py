@@ -1,36 +1,55 @@
 import pyperclip
 
 def greedy_sorting(P: list) -> tuple[int, str]:
-    d_rev = 0
-    reversal_steps = []
+  '''
+  Sorts a permutation P using greedy sorting and returns the approximate reversal distance and the formatted list of permutations after each reversal.
 
-    n = len(P)
+  Args:
+    P (list): A list of integers representing the permutation.
 
-    for k in range(1, n + 1):
-        if P[k - 1] != k:
-            idx = next(i for i, value in enumerate(P) if abs(value) == k)
+  Returns:
+    d_rev (int): The approximate reversal distance.
+    formatted_permutations (str): A string representation of the permutations after each reversal, formatted with each integer preceded by a '+' or '-' sign.
+  '''
+  d_rev = 0
+  reversal_steps = []
 
-            P[k - 1:idx + 1] = [-x for x in reversed(P[k - 1:idx + 1])]
-            reversal_steps.append(P.copy())
-            d_rev += 1
+  n = len(P)
 
-        if P[k - 1] == -k:
-            P[k - 1] = k
-            reversal_steps.append(P.copy())
-            d_rev += 1
+  for k in range(1, n + 1):
+    if P[k - 1] != k:
+      idx = next(i for i, value in enumerate(P) if abs(value) == k)
 
-    formatted_permutations = format_permutations(reversal_steps)
+      P[k - 1:idx + 1] = [-x for x in reversed(P[k - 1:idx + 1])]
+      reversal_steps.append(P.copy())
+      d_rev += 1
 
-    return d_rev, formatted_permutations
+    if P[k - 1] == -k:
+      P[k - 1] = k
+      reversal_steps.append(P.copy())
+      d_rev += 1
+
+  formatted_permutations = format_permutations(reversal_steps)
+
+  return d_rev, formatted_permutations
 
 
 def format_permutations(permutations: list) -> str:
-    formatted_permutations = []
-    for p in permutations:
-        formatted = ' '.join(f"{x:+d}" for x in p)
-        print(formatted)
-        formatted_permutations.append(formatted)
-    return '\n'.join(formatted_permutations)
+  '''
+  Formats the list of permutations into a string with each permutation on a new line.
+
+  Args:
+    permutations (list): A list of lists, where each inner list is a permutation.
+  
+  Returns:
+    str: A string representation of the permutations, formatted with each integer preceded by a '+' or '-' sign.
+  '''
+  formatted_permutations = []
+  for p in permutations:
+    formatted = ' '.join(f"{x:+d}" for x in p)
+    print(formatted)
+    formatted_permutations.append(formatted)
+  return '\n'.join(formatted_permutations)
 
 
 if __name__ == "__main__":
