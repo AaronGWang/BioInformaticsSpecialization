@@ -3,12 +3,17 @@ from colored_edges import colored_edges as genome_to_graph
 from collections import defaultdict
 import re
 
-def combine_graphs_from_genomes(P, Q):
-  combined_edges = sorted(genome_to_graph(P)) + sorted(genome_to_graph(Q))
-  return combined_edges
-
-
 def two_break_distance(P: list, Q: list) -> int:
+  '''
+  Computes the two-break distance between two genomes represented as lists of chromosomes.
+
+  Args:
+    P (list): A list of list integers representing the first genome's chromosomes.
+    Q (list): A list of list integers representing the second genome's chromosomes.
+
+  Returns:
+    int: The two-break distance between the two genomes.
+  '''
   blocks = sum([len(a) for a in P])
   edges = genome_to_graph(P).union(genome_to_graph(Q))
   parent = dict()
