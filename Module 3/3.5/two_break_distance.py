@@ -3,77 +3,67 @@ from colored_edges import colored_edges as genome_to_graph
 from collections import defaultdict
 import re
 
-
 def combine_graphs_from_genomes(P, Q):
   combined_edges = sorted(genome_to_graph(P)) + sorted(genome_to_graph(Q))
-
   return combined_edges
 
 
-from collections import defaultdict
+def two_break_distance(P: list, Q: list) -> int:
+  blocks = sum([len(a) for a in P])
+  edges = genome_to_graph(P).union(genome_to_graph(Q))
+  parent = dict()
+  rank = dict()
 
-def count_cycles(edges: list) -> int:
-    graph = defaultdict(list)
-    for u, v in edges:
-        graph[u].append(v)
-        graph[v].append(u)
+  for e in edges:
+    parent[e[0]] = e[0]
+    parent[e[1]] = e[1]
+    rank[e[0]] = 0
+    rank[e[1]] = 0
 
-    count = 0
+  def findParent(i):
+    if i != parent[i]:
+      parent[i] = findParent(parent[i])
+    return parent[i]
+  
+  def union(i, j):
+    i_id = findParent(i)
+    j_id = findParent(j)
+    if i_id == j_id:
+      return
+    if rank[i_id] > rank[j_id]:
+      parent[j_id] = i_id
+    else:
+      parent[i_id] = j_id
+      if rank[i_id] == rank[j_id]:
+        rank[j_id] += 1
+  
+  for e in edges:
+    union(e[0], e[1])
 
-    for start in graph:
-        stack = [(start, [start], set())]  # (current_node, path, visited_edges)
-        while stack:
-            current, path, visited_edges = stack.pop()
+  nodesSets = set()
 
-            for neighbor in graph[current]:
-                edge = tuple(sorted((current, neighbor)))
-                if edge in visited_edges:
-                    continue
-                new_visited = visited_edges.copy()
-                new_visited.add(edge)
-
-                if neighbor == start and len(path) >= 3:
-                    count += 1
-                elif neighbor not in path:
-                    stack.append((neighbor, path + [neighbor], new_visited))
-
-    return count
-
-
-def two_break_distance(P, Q):
-  '''
-  Computes the two-break distance between two genomes represented as lists of chromosomes.
-
-  Args:
-    P (list): A list of chromosomes representing the first genome.
-    Q (list): A list of chromosomes representing the second genome.
-
-  Returns:
-    int: The two-break distance between the two genomes.
-  '''
-  combined_graph = combine_graphs_from_genomes(P, Q)
-  num_cycles = count_cycles(combined_graph)
-
-  num_blocks = sum(len(sublist) for sublist in P)
-
-  two_break_distance = num_blocks - num_cycles
-
-  return two_break_distance
+  for e in edges:
+    id = findParent(e[0])
+    nodesSets.add(id)
+  
+  cycles = len(nodesSets)
+  dist = blocks - cycles
+  return dist
 
 
 if __name__ == "__main__":
   lines = []
 
   with open('two_break_distance.txt', 'r') as f:
-      for line in f:
-          # Find all groups like (+1 2 -3) using regex
-          groups = re.findall(r'\((.*?)\)', line)
-          line_lists = []
-          for group in groups:
-              # Split by space and convert each to int
-              nums = [int(x) for x in group.strip().split()]
-              line_lists.append(nums)
-          lines.append(line_lists)
+    for line in f:
+      # Find all groups like (+1 2 -3) using regex
+      groups = re.findall(r'\((.*?)\)', line)
+      line_lists = []
+      for group in groups:
+        # Split by space and convert each to int
+        nums = [int(x) for x in group.strip().split()]
+        line_lists.append(nums)
+      lines.append(line_lists)
 
   P = lines[0]
   Q = lines[1]
@@ -81,6 +71,7 @@ if __name__ == "__main__":
   result = two_break_distance(P, Q)
   print(f"Two-break distance: {result}")
   pyperclip.copy(str(result))
+
 
 # Sample Input:
 # (+1 +2 +3 +4 +5 +6)
