@@ -4,13 +4,13 @@ import re
 
 def colored_edges(P: list) -> set:
   '''
-  Converts a list of chromosomes into a set of colored edges.
+  Converts a list of chromosomes into a graph.
 
   Args:
     P (list): A list of list integers representing chromosomes, where positive integers represent forward strands and negative integers represent reverse strands.
 
   Returns:
-    set: A set of tuples representing the colored edges.
+    set: A set of tuples representing the graph.
   '''
   edges = set()
   
