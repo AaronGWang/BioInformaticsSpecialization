@@ -1,0 +1,39 @@
+import pyperclip
+from chromosome_cycle_transformation import cycle_to_chromosome
+
+def find_cycles(genome_graph: set) -> list:
+
+
+def graph_to_genome(genome_graph: set) -> list:
+  P = []
+  cycles = find_cycles(genome_graph)
+
+  for cycle in cycles:
+    nodes = [node for node in cycle]
+    chromosome = cycle_to_chromosome(nodes)
+    P.append(chromosome)
+  return P
+
+
+if __name__ == "__main__":
+  input = {
+    (2, 4), (3, 6), (5, 1), (7, 9), (10, 12), (11, 8)
+  }
+
+  print(graph_to_genome(input))
+
+
+# Sample Input:
+# (2, 4), (3, 6), (5, 1), (7, 9), (10, 12), (11, 8)
+
+# Sample Output:
+# (+1 -2 -3)(-4 +5 -6)
+
+
+# GraphToGenome(GenomeGraph)
+#      P ← an empty set of chromosomes
+#      for each cycle Nodes in GenomeGraph
+#           Nodes ← sequence of nodes in this cycle (starting from node 1)
+#           Chromosome ← CycleToChromosome(Nodes)
+#           add Chromosome to P
+#      return P
