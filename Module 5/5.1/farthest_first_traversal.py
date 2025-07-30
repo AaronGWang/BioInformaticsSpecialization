@@ -1,45 +1,20 @@
 import pyperclip
-import random
+import math
 
 def calculate_distance(point1: list, point2: list) -> float:
-  m = len(point1)
-  distance = sum(((point1[i] - point2[i]) ** 2) for i in range(m)) ** 0.5
-
-  return distance
+  return math.sqrt(sum((a - b) ** 2 for a, b in zip(point1, point2)))
 
 
-def form_cluster(centers: list, data: list) -> dict:
-  clusters = {tuple(point): [] for point in centers}
-
-  for point in data:
-    closest_center = min(centers, key=lambda c: calculate_distance(point, c))
-    clusters[tuple(closest_center)].append(point)
-
-  return clusters
+def distance_to_nearest_center(point, centers):
+  return min(calculate_distance(point, center) for center in centers)
 
 
-def farthest_first_traversal(data: list, k: int) -> list:
-  centers = [random.choice(data)]
-  current_center = centers[0]
-  clusters = form_cluster(centers, data)
-  # print("Centers:", centers)
-  # print("Current center:", current_center)
-  # print("Clusters:", clusters)
-  # print("--------\n")
-
+def farthest_first_traversal(data, k):
+  centers = [data[0]]  # Initialize with the first point
   while len(centers) < k:
-    new_center = max(clusters[tuple(current_center)], 
-                     key=lambda point: calculate_distance(point, current_center))
-    
-    # print("New farthest center found:", new_center)
-    centers.append(new_center)
-    current_center = new_center
-    clusters = form_cluster(centers, data)
-
-    # print("Centers:", centers)
-    # print("Clusters:", clusters)
-    # print("--------\n")
-
+    # Find the point with the maximum distance to its nearest center
+    next_center = max(data, key=lambda point: distance_to_nearest_center(point, centers))
+    centers.append(next_center)
   return centers
 
 
